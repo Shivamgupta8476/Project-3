@@ -9,8 +9,7 @@ const userModel = new mongoose.Schema(
 
     },
 
-
-    name: {
+     name: {
       type: String,
       required: true,
       trim: true,

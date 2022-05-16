@@ -31,7 +31,7 @@ const createuser = async (req, res) => {
       return String(name).trim().match(
         /^[a-zA-Z0-9_.-]/);
     };
- 
+
 
     //VALIDATION OF MOBILE NO BY REJEX
     const validateNumber = (Feild) => {
@@ -50,27 +50,27 @@ const createuser = async (req, res) => {
 
     const data = req.body;
     if (Object.keys(data).length == 0) {
-      return res.status(400).send({ status: false, msg: "Feild Can't Empty.Please Enter Some Details" });
+      return res.status(400).send({ status: false, message: "Feild Can't Empty.Please Enter Some Details" });
     }
 
     if (!data.title) {
-      return res.status(400).send({ status: false, msg: "Title is missing" });
+      return res.status(400).send({ status: false, message: "Title is missing" });
     }
 
     let validTitle = ['Mr', 'Mrs', 'Miss'];
-    if (!validTitle.includes(data.title.trim())) return res.status(400).send({ status: false, msg: "Title should be one of Mr, Mrs, Miss" });
+    if (!validTitle.includes(data.title.trim())) return res.status(400).send({ status: false, message: "Title should be one of Mr, Mrs, Miss" });
 
     if (!data.name) {
-      return res.status(400).send({ status: false, msg: "Name is missing" });
+      return res.status(400).send({ status: false, message: "Name is missing" });
     }
 
     //Name validation by Rejex
     if (!validatefeild(data.name)) {
-      return res.status(400).send({ status: false, msg: "Invalid Name format", });
+      return res.status(400).send({ status: false, message: "Invalid Name format", });
     }
 
     let validString = /\d/;
-    if (validString.test(data.name.trim())) return res.status(400).send({ status: false, msg: "Name must be valid it should not contains numbers" });
+    if (validString.test(data.name.trim())) return res.status(400).send({ status: false, message: "Name must be valid it should not contains numbers" });
 
     if (!data.phone) {
       return res.status(400).send({ status: false, message: "Phone Number is missing" });
@@ -102,23 +102,23 @@ const createuser = async (req, res) => {
     }
 
     if (!data.password) {
-      return res.status(400).send({ status: false, msg: "Password is missing" });
+      return res.status(400).send({ status: false, message: "Password is missing" });
     }
 
     //password validation by Rejex
 
     if (!validatePassword(data.password)) {
-      return res.status(400).send({ status: false, msg: "Password should contain at-least one number,one special character and one capital letter", }); //password validation
+      return res.status(400).send({ status: false, message: "Password should contain at-least one number,one special character and one capital letter", }); //password validation
     }
 if(data.address){
     if (data.address.street) {
       if (!validatestreet(data.address.street)) {
-        return res.status(400).send({ status: false, msg: "Street must contain Alphabet or Number", });
+        return res.status(400).send({ status: false, message: "Street must contain Alphabet or Number", });
       }
     }
     if (data.address.city) {
       if (!validatefeild(data.address.city)) {
-        return res.status(400).send({ status: false, msg: "field must contain the name of the city", });
+        return res.status(400).send({ status: false, message: "field must contain the name of the city", });
       }
       let validString = /\d/;
       if (validString.test(data.address.city)) return res.status(400).send({ status: false, msg: " Name of the City must be valid it should not contains numbers" });
@@ -126,12 +126,12 @@ if(data.address){
 
     if (data.address.pincode) {
       if (!validatepincode(data.address.pincode)) {
-        return res.status(400).send({ status: false, msg: "Invalid Pincode", });
+        return res.status(400).send({ status: false, message: "Invalid Pincode", });
       }
     }}
 
     const user = await userModel.create(data);
-    return res.status(201).send({ status: true, msg: user });
+    return res.status(201).send({ status: true, message: "Success", data:user });
   }
 
   catch (err) {
@@ -149,24 +149,24 @@ const login = async function (req, res) {
     const data = req.body;
 
     if (Object.keys(data).length == 0) {
-      return res.status(400).send({ status: false, msg: "Feild Can't Empty.Please Enter Some Details" }); //details is given or not
+      return res.status(400).send({ status: false, message: "Feild Can't Empty.Please Enter Some Details" }); //details is given or not
     }
 
     let email = req.body.email;
     let password = req.body.password;
 
     if (!email) {
-      return res.status(400).send({ sataus: false, msg: "Email is missing" });
+      return res.status(400).send({ sataus: false, message: "Email is missing" });
     }
 
     if (!password) {
-      return res.status(400).send({ status: false, msg: "Password not given" });
+      return res.status(400).send({ status: false, message: "Password not given" });
     }
 
     const findemailpass = await userModel.findOne({ email: email, password: password, }); //verification for Email Password
 
     if (!findemailpass)// No Data Stored in findemailpass variable Beacuse no entry found with this email id nd password
-      return res.status(400).send({ status: false, msg: "Email and Password not Matched" });
+      return res.status(401).send({ status: false, message: "Invalid Login Credentials" });
 
     var token = jwt.sign(
       { "UserId": findemailpass._id },
@@ -175,7 +175,7 @@ const login = async function (req, res) {
 
 
     res.setHeader("x-api-key", token);
-    res.status(200).send({ status: true, data: token });
+    res.status(200).send({ status: true, message:"Success",data: token });
   }
 
   catch (err) {

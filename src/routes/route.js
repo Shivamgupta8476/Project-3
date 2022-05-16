@@ -8,7 +8,7 @@ const reviewcontroller=require("../controller/reviewcontroller")
 
 //user Register
 router.post("/register",userController.createuser)
-router.post('/login',userController.login) //login Phase 2
+router.post('/login',userController.login) 
 
 //Books API
 router.post("/books",middleware.authentication,bookController.createBook)
@@ -26,17 +26,17 @@ router.delete("/books/:bookId/review/:reviewId",reviewcontroller.deleteReview)
 //If url is Incorrect
 router.post("*", (req,res) =>{
 
-    return res.status(404).send({ msg:"Page Not Found"})
+    return res.status(404).send({ message:"Page Not Found"})
 })
 router.get("*", (req,res) =>{
-    return res.status(404).send({ msg:"Page Not Found"})
+    return res.status(404).send({ message:"Page Not Found"})
 })
 router.put("*", (req,res) =>{
-    return res.status(404).send({ msg:"Page Not Found"})
+    return res.status(404).send({ message:"Page Not Found"})
 })
 
 router.delete("*", (req,res) =>{
-    return res.status(404).send({ msg:"Page Not Found"})
+    return res.status(404).send({ message:"Page Not Found"})
 })
 
 module.exports = router;
